@@ -1,0 +1,33 @@
+package com.example.demo.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.example.demo.entity.Player;
+import com.example.demo.service.UserService;
+
+/**
+ * ユーザー情報 Controller
+ */
+@Controller
+public class PlayerController {
+
+  /**
+   * ユーザー情報 Service
+   */
+  @Autowired
+  private UserService userService;
+
+  @GetMapping
+  public String index(Pageable pageable, Model model) {
+
+      Page<Player> playerPage = playerService.getPlayers(pageable);
+
+      model.addAttribute("page", playerPage);
+      model.addAttribute("players", playerPage.getContent());
+
+      return "pages/index";
+  }
+}

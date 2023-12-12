@@ -1,0 +1,19 @@
+package jp.sbworks.standard.web.db.single.pojo;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+
+public class SSample implements Serializable {
+
+    // ID 
+    public Integer id;
+    // 名前 
+    public String name;
+    // 部署 
+    public Integer department;
+    // 入社日
+    public LocalDate dayOfJoining;
+    // 登録者 
+    public String regName;
+
+}

@@ -1,0 +1,46 @@
+package jp.sbworks.standard.web.dao;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.sql2o.Sql2o;
+
+import jp.sbworks.standard.web.db.single.pojo.SSample;
+
+
+@Repository
+public class SampleDao {
+
+    @Autowired
+// データベースアクセス用のライブラリ
+    private Sql2o sql2o;
+ 
+    // リスト情報を取得する 
+    public List<SSample> getMemberList(HashMap<String, String> search) throws SQLException, IOException {
+        // Jdbcに接続する
+        Connection con = sql2o.open();
+        con.getJdbcConnection().setAutoCommit(false);
+        // クエリの作成
+        Query query = con.createQuery("select ID as id, NAME as name, DEPARTMENT as department, DAY_OF_JOINING as dayOfJoining from SAMPLE limit :limit offset :offset;");
+        int limit = Integer.valueOf(search.get("limit"));
+        int page = Integer.valueOf(search.get("page")) - 1;
+        // 何件情報を取得するかの指定。
+        query = query.addParameter("limit", limit);
+        // 何件目からの情報を取得するかの指定（※コントローラからパラメータを使って現在のページ数が分かる。それによって何件目からの情報を取得すればいいのかが分かる。）
+        query = query.addParameter("offset", limit * page);
+
+        return query.executeAndFetch(SSample.class);
+    }
+    
+    // リスト情報件数を取得する 
+    public int getMemberListCount() throws SQLException, IOException {
+        Connection con = sql2o.open();
+        con.getJdbcConnection().setAutoCommit(false);
+        Query query =  con.createQuery("select count(1) from SAMPLE");
+        return query.executeAndFetchFirst(Integer.class);
+     }
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/head :: head_fragment(title = 'ユーザー情報詳細', scripts = ~{::script}, links = ~{::link})"></head>
+<body>
+ <!-- body部 -->
+
+<!-- 以降がページネーション部分 -->
+<div>
+  <ul>
+    <li style="display:inline;">
+      <span th:if="${page.first}">&lt;&lt;前</span>
+      <a
+        th:if="${!page.first}"
+        th:href="@{user/list(page = ${page.number} - 1)}"
+      >
+        &lt;&lt;前
+      </a>
+    </li>
+    <li
+      th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+      style="display:inline; margin-left:10px;"
+    >
+      <span th:if="${i} == ${page.number}" th:text="${i + 1}">1</span>
+      <a
+        th:if="${i} != ${page.number}"
+        th:href="@{/user/list(page = ${i})}"
+      >
+        <span th:text="${i+1}">1</span>
+      </a>
+    </li>
+    <li style="display:inline; margin-left:10px;">
+      <span th:if="${page.last}">次&gt;&gt;</span>
+      <a
+        th:if="${!page.last}"
+        th:href="@{/user/list(page = (${page.number} + 1))}"
+      >
+        次&gt;&gt;
+      </a>
+    </li>
+  </ul>
+</div>
+</body>
+</html>
